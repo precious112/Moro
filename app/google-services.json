@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "354027870292",
+    "project_id": "moro-30a33",
+    "storage_bucket": "moro-30a33.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354027870292:android:c77bfc49b9c706b2be35c1",
+        "android_client_info": {
+          "package_name": "com.precious.moro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "354027870292-94ckpb994889h5rrkr97d3jh9vfgtcsd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmNLqIXzgPAjIOhpJve9L3UZSzClESTws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "354027870292-94ckpb994889h5rrkr97d3jh9vfgtcsd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
