@@ -40,6 +40,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.precious.moro.Models.FollowerList;
 
 public class EditProfileActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
@@ -223,6 +230,32 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 String imageProfile = documentSnapshot.getString("imageProfile");
                 Glide.with(EditProfileActivity.this).load(imageProfile).into(ProfilePic);
+                addToRTDatabase();
+
+
+
+
+            }
+        });
+    }
+
+    private void addToRTDatabase(){
+        firestore.collection("Users").document(firebaseUser.getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                String imageProfile = documentSnapshot.getString("imageProfile");
+                String username= documentSnapshot.getString("userName");
+                User user = new User(firebaseUser.getUid(),username,"",imageProfile,"","","");
+                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                mDatabase.child("User").child(firebaseUser.getUid()).setValue(user);
+                FollowerList FL = new FollowerList(new HashMap<String,String>());
+                HashMap<String,String> H = new HashMap<String, String>();
+                H.put("s","s");
+                H.put("v","v");
+                //H.put(firebaseUser.getUid(),firebaseUser.getUid());
+                FL.setFollowersList(H);
+                mDatabase.child("FollowerList").child(firebaseUser.getUid()).setValue(FL);
 
 
 

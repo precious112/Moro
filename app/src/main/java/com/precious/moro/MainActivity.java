@@ -1,11 +1,16 @@
 package com.precious.moro;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.etebarian.meowbottomnavigation.MeowBottomNavigation;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -15,18 +20,32 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.precious.moro.Adapters.HomeFragmentAdapter;
+import com.precious.moro.Fragments.CameraFragment;
+import com.precious.moro.Fragments.HomeFragment;
+import com.precious.moro.Fragments.SearchFragment;
+import com.precious.moro.Interfaces.SearchCallBack;
+import com.precious.moro.Interfaces.VideoUploadCallBack;
+import com.precious.moro.Interfaces.VideosCallBack;
 
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity {
-    private final int ID_HOME=1;
-    private final int ID_MESSAGE=2;
-    private final int ID_NOTIFICATION=3;
-    private final int ID_ACCOUNT=4;
-    private final int ID_PROFILE=5;
+public class MainActivity extends AppCompatActivity implements VideosCallBack, SearchCallBack, VideoUploadCallBack {
     private FirebaseUser firebaseUser;
+    BottomNavigationView bottomNavigationView;
 
+    private VideosCallBack callback;
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+
+        if (fragment instanceof VideosCallBack) {
+            callback = (VideosCallBack) fragment;
+        }
+    }
 
 
     @Override
@@ -38,75 +57,53 @@ public class MainActivity extends AppCompatActivity {
         }
 
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        MeowBottomNavigation bottomNavigation = findViewById(R.id.bottomNavigation);
-        bottomNavigation.add(new MeowBottomNavigation.Model(ID_HOME,R.drawable.ic_baseline_home_24));
-        bottomNavigation.add(new MeowBottomNavigation.Model(ID_NOTIFICATION,R.drawable.ic_baseline_notifications_24));
-        bottomNavigation.add(new MeowBottomNavigation.Model(ID_ACCOUNT,R.drawable.ic_baseline_search_24));
-        bottomNavigation.add(new MeowBottomNavigation.Model(ID_MESSAGE,R.drawable.ic_baseline_add_24));
-        bottomNavigation.add(new MeowBottomNavigation.Model(ID_PROFILE,R.drawable.ic_baseline_person_24));
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        bottomNavigation.setOnClickMenuListener(new MeowBottomNavigation.ClickListener() {
-            @Override
-            public void onClickItem(MeowBottomNavigation.Model item) {
-                Toast.makeText(MainActivity.this,"clicked item"+ item.getId(),Toast.LENGTH_SHORT).show();
-            }
-        });
+        bottomNavigationView.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
+        bottomNavigationView.setSelectedItemId(R.id.home);
 
-        bottomNavigation.setOnShowListener(new MeowBottomNavigation.ShowListener() {
-            @Override
-            public void onShowItem(MeowBottomNavigation.Model item) {
-
-                String name;
-                switch (item.getId()){
-
-                    case ID_HOME :name = "HOME";
-                    break;
-
-                    case ID_NOTIFICATION :name = "Notification";
-                        break;
-
-                    case ID_MESSAGE :name = "Message";
-                        break;
-
-                    case ID_ACCOUNT :name = "Account";
-                        break;
+    }
+    HomeFragment HomeFragment = new HomeFragment();
+    SearchFragment SearchFragment = new SearchFragment();
+    CameraFragment CameraFragment = new CameraFragment();
 
 
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.home:
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment).commit();
+                return true;
+
+            case R.id.search:
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, SearchFragment).commit();
+                return true;
+
+            case R.id.camera:
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, CameraFragment).commit();
+                return true;
+
+            case R.id.profile:
+                startActivity(new Intent(MainActivity.this,ProfileActivity.class));
+                return true;
+        }
+        return false;
+    }
 
 
-                    default:name="" ;
-                }
-            Toast.makeText(MainActivity.this,name,Toast.LENGTH_SHORT).show();
+    @Override
+    public void videoCallBacks() {
+        HomeFragment.videoCallBacks();
+    }
 
-             if(item.getId() == ID_PROFILE) {
-                 firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                 String Id = firebaseUser.getUid();
-                 firestore.collection("Users").document(Id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                     @Override
-                     public void onSuccess(DocumentSnapshot documentSnapshot){
-                         String username = documentSnapshot.get("userName").toString();
-                         if(username.isEmpty()){
-                             startActivity(new Intent(MainActivity.this,AddNameActivity.class));
-                         } else{
-                             startActivity(new Intent(MainActivity.this,ProfileActivity.class));
-                         }
-                     }
-                 });
+    @Override
+    public void searchCallBacks() {
+        SearchFragment.searchCallBacks();
+    }
 
-
-
-             }
-            }
-        });
-
-
-
-
-
-
-
-
-
+    @Override
+    public void videoCallBack() {
+        CameraFragment.videoCallBack();
 
     }
 }

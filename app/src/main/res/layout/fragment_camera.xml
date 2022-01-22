@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+         <VideoView
+             android:id="@+id/Video_viewUploader"
+             android:layout_width="match_parent"
+             android:layout_height="300dp"
+             android:layout_marginTop="5dp"
+             android:layout_marginBottom="5dp"
+             android:layout_alignParentLeft="true"
+             android:layout_alignParentRight="true"
+             android:layout_alignParentTop="true"
+             />
+
+     <LinearLayout
+         android:id="@+id/LLayout"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/Video_viewUploader"
+         android:layout_marginTop="10dp"
+         android:layout_marginBottom="10dp"
+         android:orientation="horizontal">
+         <TextView
+             android:id="@+id/VideoCaption"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Caption:"/>
+         <EditText
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="40dp"
+             android:paddingLeft="6dp"
+             android:hint="caption"/>
+
+     </LinearLayout>
+
+
+    <Button
+        android:id="@+id/uploadbtn"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/LLayout"
+        android:text="Upload"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="50dp"
+        />
+    <Button
+        android:id="@+id/choosebtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/uploadbtn"
+        android:layout_marginLeft="130dp"
+        android:layout_marginTop="30dp"
+        android:text="choose video"/>
+
+
+</RelativeLayout>
+</layout>
